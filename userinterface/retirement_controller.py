@@ -6,8 +6,7 @@ import os.path
 
 app = Flask(__name__)
 hr_df = pd.read_csv("./社員データ.csv")
-hr_df[['satisfaction_level', 'last_evaluation', 'time_spend_company']]
-社員データ = hr_df[['satisfaction_level', 'last_evaluation', 'time_spend_company']]
+社員データ = hr_df[['satisfaction_level', 'promotion_last_5years', 'time_spend_company']]
 
 
 @app.route('/predict', methods=["POST"])
@@ -21,13 +20,10 @@ def predict():
     # last_evaluation = request.json["last_evaluation"]
     # number_project = request.json["number_project"]
 
-    parent_directory = os.path.dirname(os.path.abspath(__file__))
-    # print("os.path.dirnameはこのファイルの親ディレクトリを返す: " + parent_directory)
     loaded_model = pickle.load(open("/Users/hana/ml/retirement-rate-project/退職率計算モデル.sav", "rb"))
     # x = [satisfaction_level, last_evaluation, number_project]
-    loaded_model.predict([社員データ])
-
     # print(loaded_model.predict([x]))
+    loaded_model.predict([社員データ])
     # exit(0)
     return jsonify({
         #  "retirement rate": str(loaded_model.predict([x])[0])
