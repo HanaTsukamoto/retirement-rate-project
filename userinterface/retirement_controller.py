@@ -21,6 +21,7 @@ def predict():
     number_project = hr_df[['number_project']]
 
     loaded_model = pickle.load(open("/Users/hana/ml/retirement-rate-project/退職率計算モデル.sav", "rb"))
+    #  相対パス
     x = [satisfaction_level, last_evaluation, number_project]
 
     return jsonify({
@@ -38,14 +39,16 @@ def all():
     """ 
     loaded_model = pickle.load(open("/Users/hana/ml/retirement-rate-project/退職率計算モデル.sav", "rb"))
     loaded_model.predict(社員データ)
+    # loadedmodel print　method の戻り値
+    print(loaded_model.predict(社員データ))
     
-    for i in range(len(社員データ)):
-        if predict(社員データ[i]) >= 0.75: 
-            print(hr_df[['社員ID']])
+    # for i in range(len(社員データ)):
+    #     if predict(社員データ[i]) >= 0.75: 
+    #         print(hr_df[['社員ID']])
 
 
     return jsonify({
-        "退職率の高い社員一覧"
+        "社員IDと退職率"
     })
 
 
