@@ -7,7 +7,7 @@ import os.path
 app = Flask(__name__)
 hr_df = pd.read_csv("./社員データ.csv")
 社員データ = hr_df[['satisfaction_level', 'last_evaluation', 'number_project']]
-
+社員ID = hr_df['社員ID']
 
 @app.route('/predict', methods=["POST"])
 def predict():
@@ -15,10 +15,10 @@ def predict():
     社員の退職率を予測します。
     社員のデータを受け取って、退職率予測モデルに入力して、退職率を0~100の間で返します。
     """
-    print("request.json = ", request.json)
-    satisfaction_level = hr_df[['satisfaction_level']]
-    last_evaluation = hr_df[['last_evaluation']]
-    number_project = hr_df[['number_project']]
+    url = 'http://localhost:8080/predict'
+    satisfaction_level =  request.json.post(url, 'satisfaction_level')
+    last_evaluation =  request.json.post(url, 'last_evaluation')
+    number_project =  request.json.post(url, 'number_project')
 
     loaded_model = pickle.load(open("/Users/hana/ml/retirement-rate-project/退職率計算モデル.sav", "rb"))
     #  相対パス
@@ -38,17 +38,18 @@ def all():
     社員の退職率データを受け取って退職率が75%以上の社員を表示
     """ 
     loaded_model = pickle.load(open("/Users/hana/ml/retirement-rate-project/退職率計算モデル.sav", "rb"))
-    loaded_model.predict(社員データ)
+    退職率 = loaded_model.predict_proba(社員データ)[:, 1]
+    # print(退職率)
     # loadedmodel print　method の戻り値
-    print(loaded_model.predict(社員データ))
+    # print(loaded_model.predict_proba(社員データ)[:, 1])
     
-    # for i in range(len(社員データ)):
-    #     if predict(社員データ[i]) >= 0.75: 
-    #         print(hr_df[['社員ID']])
-
-
+    退職率一覧 = {}
+    for i in range(len(社員データ)):
+       if 退職率[i] >= 0.75:
+           退職率一覧[社員ID[i]] = 退職率[i]
+                   
     return jsonify({
-        "社員IDと退職率"
+        "退職率が高い社員一覧": 退職率一覧
     })
 
 
