@@ -5,7 +5,7 @@ cd /path/to/retirement-rate-project
 
 git add .
 git commit -m "プログラムを保存します"
-git push origin main
+git push origin master
 ```
 
 ```bash
@@ -15,9 +15,9 @@ python userinterface/retirement_controller.py
 # 社員の退職率を予測する
 curl -XPOST "http://localhost:8080/predict" -H "Content-type:application/json" -d '
 {
-    satisfaction_level = 9.2,
-    last_evaluation = 2.2,
-    number_project = 6.8 
+    "satisfaction_level": 5.0,
+    "last_evaluation": 3.2,
+    "number_project": 10
 }
 '
 
